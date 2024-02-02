@@ -22,6 +22,14 @@ public class Tests
         Assert.IsTrue(client.httpClient.GetType() == typeof(System.Net.Http.HttpClient));
     }
 
+    [Test]
+    public async Task TestReadCard()
+    {
+        var client = new Client();
+        var card = await client.ReadCard("random");
+        Assert.IsTrue(card.Length > 0);
+    }
+
     // [Test]
     // public void TestStartsWithUpper()
     // {

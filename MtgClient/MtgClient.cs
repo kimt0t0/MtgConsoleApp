@@ -9,13 +9,19 @@ public class Client
 
     public Client()
     {
-        this.httpClient = new HttpClient();
         this.Api = "https://api.scryfall.com";
+        this.httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Accept.Clear();
         httpClient.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
         httpClient.DefaultRequestHeaders.Add("Page-Size", "10");
         httpClient.DefaultRequestHeaders.Add("Count", "10");
+    }
+
+    public async Task<string> ReadCard(string blob)
+    {
+        var card = await this.httpClient.GetStringAsync(this.Api + $"/cards/{blob}");
+        return card;
     }
 
 
