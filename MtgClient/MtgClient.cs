@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text.Json;
 using System.Linq;
+using System.Globalization;
 
 namespace MtgClient;
 
@@ -13,7 +14,7 @@ public class Client
         BaseAddress = new Uri("https://api.scryfall.com/")
     };
 
-    public async Task ReadRandomCards()
+    public async Task<CardModel?[]?> ReadRandomCards()
     {
         /*
         * The API developers ask us to insert 50-100 ms of delay between requests
@@ -55,41 +56,37 @@ public class Client
         {
                 Task.Run(getRandom),
                 Task.Run(() => waitThen(1000, getRandom, 1)),
-                Task.Run(() => waitThen(1000, getRandom, 2)),
+                Task.Run(() => waitThen(100, getRandom, 2)),
+                Task.Run(() => waitThen(100, getRandom, 3)),
+                Task.Run(() => waitThen(100, getRandom, 4)),
+                Task.Run(() => waitThen(100, getRandom, 5)),
+                Task.Run(() => waitThen(100, getRandom, 6)),
+                Task.Run(() => waitThen(100, getRandom, 7)),
+                Task.Run(() => waitThen(100, getRandom, 8)),
+                Task.Run(() => waitThen(100, getRandom, 9)),
+                Task.Run(() => waitThen(100, getRandom, 10)),
         };
 
-        var cards = await Task.WhenAll(tasks);
+        CardModel?[]? cards = await Task.WhenAll(tasks);
         foreach (var card in cards.Where(x => x != null))
         {
             Console.WriteLine($"Carte lue: {card?.Name}");
         }
-
+        return cards;
     }
 
-    // public async Task<CardModel?[]> ReadRandomCards()
-    // {
-    //     // Initialize cards tasks list
-    //     List<Task<CardModel?>> tasks = new List<Task<CardModel?>>();
-    //     // Add tasks to list
-    //     for (int i = 0; i < 3; i++)
-    //     {
-    //         tasks.Add(httpClient.GetFromJsonAsync<CardModel>(this.Api + "/cards/random"));
-    //     }
-    //     Console.WriteLine($"--- J'ai {tasks.Count()} tâches listées.");
-
-    //     // Wait for tasks resolution and add results to cards list
-    //     CardModel?[] loadedCards = await Task.WhenAll(tasks);
-
-    //     Console.WriteLine($"--- La liste des cartes comporte {loadedCards.Count()} items");
-    //     Console.WriteLine("Contenu de la liste des cartes:");
-
-    //     // Print cards list
-    //     foreach (var card in loadedCards)
-    //     {
-    //         Console.WriteLine($"CARTE: {card?.ToString()}");
-    //     }
-
-    //     return loadedCards;
-    // }
+    public IEnumerable<CardModel?> FilterCardsByType(string type, CardModel?[]? cards)
+    {
+        IEnumerable<CardModel?> FilteredCards =
+        from card in cards
+        where card.Type_Line.IndexOf(type, 0, StringComparison.OrdinalIgnoreCase) != -1
+        select card;
+        Console.WriteLine($"Cartes avec le type {type}:");
+        foreach (var fcard in FilteredCards)
+        {
+            Console.WriteLine($"{fcard?.Name}");
+        }
+        return FilteredCards;
+    }
 
 }
