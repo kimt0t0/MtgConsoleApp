@@ -26,8 +26,9 @@ public class Tests
     public async Task TestReadCard()
     {
         var client = new Client();
-        var card = await client.ReadCard("random");
-        Assert.IsTrue(card.Length > 0);
+        CardModel? card = await client.ReadCard("named?fuzzy=vampire+nighthawk");
+        Assert.IsTrue(card?.ToString().Length > 0);
+        // Assert.IsTrue(card.Length > 0);
     }
 
     // [Test]

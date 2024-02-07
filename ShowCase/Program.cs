@@ -1,9 +1,14 @@
-﻿using MtgClient;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using MtgClient;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main()
     {
-        Console.WriteLine("Showcase !");
+        Console.WriteLine("--- Démarrage...");
+        Client client = new Client();
+        await client.ReadRandomCards();
+        Console.WriteLine("--- Fin !");
     }
 }
